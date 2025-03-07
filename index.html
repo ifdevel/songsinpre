@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Order Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label { display: block; margin-top: 10px; }
+        input, textarea, button { width: 100%; padding: 8px; margin-top: 5px; }
+        .checkbox-group { display: flex; align-items: center; }
+        .checkbox-group input { width: auto; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h2>Pre-Order Form</h2>
+        <form id="orderForm">
+            <label>Full Name</label>
+            <input type="text" id="fullName" required>
+
+            <label>Address</label>
+            <textarea id="address" required></textarea>
+
+            <label>Phone</label>
+            <input type="tel" id="phone" required pattern="[0-9]{10}">
+
+            <label>Items</label>
+            <div class="checkbox-group">
+                <input type="checkbox" id="item1" value="Item A">
+                <label for="item1">Item A</label>
+                <input type="number" id="qty1" min="1" disabled>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="item2" value="Item B">
+                <label for="item2">Item B</label>
+                <input type="number" id="qty2" min="1" disabled>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="item3" value="Item C">
+                <label for="item3">Item C</label>
+                <input type="number" id="qty3" min="1" disabled>
+            </div>
+
+            <label>Upload Payment Slip</label>
+            <input type="file" id="imageSlip" accept="image/png, image/jpeg, image/jpg" required>
+
+            <label>Email for Confirmation</label>
+            <input type="email" id="email" required>
+            <input type="hidden" id="csrf_token" name="csrf_token">
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            function assignItemsAsync(checkboxes) {
+                return new Promise((resolve, reject) => {
+                    let items = {};
+                    let predefinedItemNames = ["Item A", "Item B", "Item C"];
+                    let checkedCount = 0;
+                    let checkboxArray = Array.from(checkboxes); // Convert to an array
+                    
+                    let promises = checkboxArray.map((checkbox, index) => {
+                        return new Promise((res, rej) => {
+                            if (checkbox.checked) {
+                                if (checkedCount < 3) { // Ensure only 3 slots are used
+                                    let qtyInput = document.getElementById(`qty${checkbox.id.slice(-1)}`).value;
+                                    if (!qtyInput) {
+                                        rej("Please fill quantity fields.");
+                                    } else {
+                                        items[predefinedItemNames[checkedCount]] = qtyInput;
+                                        checkedCount++;
+                                        res();
+                                    }
+                                } else {
+                                    res();
+                                }
+                            } else {
+                                res();
+                            }
+                        });
+                    });
+
+                    Promise.all(promises)
+                        .then(() => {
+                            if (Object.keys(items).length === 0) {
+                                reject("Please fill item/quantity fields.");
+                            } else {
+                                resolve(items);
+                            }
+                        })
+                        .catch(error => reject(error));
+                });
+            }
+
+            // Example Usage with async/await
+            async function processItems(checkboxes) {
+                try {
+                    let items = await assignItemsAsync(checkboxes);
+                    return items;
+                } catch (error) {
+                    alert(error);
+                    return null;
+                }
+            }
+
+
+            const checkboxes = document.querySelectorAll("input[type='checkbox']");
+            const filesinput = document.getElementById("imageSlip");
+            const csrfinput = document.getElementById("csrf_token");
+            const app = document.getElementById("app");
+            const fetchUrl = 'https://script.google.com/macros/s/AKfycbxGKwApVwJM_26b7yjbjpd_mpOEXfMfioUBVz4mvwIG2X-qZBOeI0IsH7h0lRYrrQExpQ/exec'
+            let slipbase64, slipmimetype;
+            let reader = new FileReader();
+            app.style.display = "none";
+            const tk = await fetch(fetchUrl, {
+                    redirect: 'follow',
+            });
+            const tkres = await tk.json();
+            csrfinput.value = tkres.data;
+            app.style.display = "block";
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener("change", function () {
+                    const qtyInput = document.getElementById(`qty${this.id.slice(-1)}`);
+                    qtyInput.disabled = !this.checked;
+                    if (!this.checked) qtyInput.value = "";
+                });
+            });
+
+            reader.onload = function(e){
+                slipbase64 = e.target.result.replace(/^.*,/, '');
+                slipmimetype = e.target.result.match(/^.*(?=;)/)[0];
+            }
+
+            filesinput.addEventListener('change', function(e){
+                reader.readAsDataURL(e.target.files[0]);
+            });
+
+            document.getElementById("orderForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+
+                let fullName = document.getElementById("fullName").value.trim();
+                let address = document.getElementById("address").value.trim();
+                let phone = document.getElementById("phone").value.trim();
+                let email = document.getElementById("email").value.trim();
+                let imageSlip = document.getElementById("imageSlip").files[0];
+
+                if (!fullName || !address || !phone || !email || !imageSlip) {
+                    alert("Please fill all required fields.");
+                    return;
+                }
+
+                let formData = new FormData();
+                formData.append("fullName", fullName);
+                formData.append("address", address);
+                formData.append("phone", "'" + phone);
+                formData.append("email", email);
+                formData.append("csrf_token", csrfinput.value.trim());
+
+                const items = await processItems(checkboxes);
+
+                if(!items){
+                    return;
+                }
+
+                formData.append("items", JSON.stringify(items));
+
+                // Add image file
+                if (imageSlip) {
+                    formData.append("imageSlip", slipbase64);
+                    formData.append('mimeType', slipmimetype);
+                    formData.append('filename', imageSlip.name);
+                }
+
+                try {
+                    let response = await fetch(fetchUrl, {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    let result = await response.json();
+                    if (result.success) {
+                        alert("Order submitted successfully!");
+                        document.getElementById("orderForm").reset();
+                    } else {
+                        alert("Error: " + result.error);
+                    }
+                } catch (error) {
+                    alert("Submission failed: " + error);
+                }
+            });
+
+        });
+    </script>
+
+</body>
+</html>
