@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Pre-Order Form</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
@@ -12,44 +13,47 @@
         .checkbox-group input { width: auto; margin-right: 10px; }
     </style>
 </head>
-<body>
-    <div id="app">
-        <h2>Pre-Order Form</h2>
-        <form id="orderForm">
-            <label>Full Name</label>
-            <input type="text" id="fullName" required>
+<body class="bg-[#efefef]">
+    <div id="app" class="max-w-[430px] mx-auto min-h-screen">
+        <div class="flex h-[300px] items-center">
+            <h2 class="text-2xl text-center w-full">Pre Order</h2>
+        </div>
+        <form id="orderForm" class="bg-white rounded-3xl p-4 flex flex-col gap-1">
+            <label>ชื่อ-นามสกุล</label>
+            <input type="text" id="fullName" required placeholder="พิมพ์ที่นี่..." class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
 
-            <label>Address</label>
-            <textarea id="address" required></textarea>
+            <label>ที่อยู่จัดส่ง</label>
+            <textarea id="address" required placeholder="พิมพ์ที่นี่..." class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6"></textarea>
 
-            <label>Phone</label>
-            <input type="tel" id="phone" required pattern="[0-9]{10}">
+            <label>เบอร์ติดต่อ</label>
+            <input type="tel" id="phone" required pattern="[0-9]{10}" placeholder="พิมพ์ที่นี่..." class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
 
-            <label>Items</label>
-            <div class="checkbox-group">
+            <label>อีเมล</label>
+            <input type="email" id="email" required placeholder="พิมพ์ที่นี่..." class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
+
+            <label>สินค้า</label>
+            <div class="checkbox-group flex gap-2 items-center">
                 <input type="checkbox" id="item1" value="Item A">
-                <label for="item1">Item A</label>
-                <input type="number" id="qty1" min="1" disabled>
+                <label for="item1" class="mt-0 mr-2">Item A</label>
+                <input type="number" placeholder="จำนวน" id="qty1" min="1" disabled class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
             </div>
-            <div class="checkbox-group">
+            <div class="checkbox-group flex gap-2 items-center">
                 <input type="checkbox" id="item2" value="Item B">
-                <label for="item2">Item B</label>
-                <input type="number" id="qty2" min="1" disabled>
+                <label for="item2" class="mt-0 mr-2">Item B</label>
+                <input type="number" placeholder="จำนวน" id="qty2" min="1" disabled class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
             </div>
-            <div class="checkbox-group">
+            <div class="checkbox-group flex gap-2 items-center">
                 <input type="checkbox" id="item3" value="Item C">
-                <label for="item3">Item C</label>
-                <input type="number" id="qty3" min="1" disabled>
+                <label for="item3" class="mt-0 mr-2">Item C</label>
+                <input type="number" placeholder="จำนวน" id="qty3" min="1" disabled class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
             </div>
 
-            <label>Upload Payment Slip</label>
+            <label>อัพโหลดรูปสลิป</label>
             <input type="file" id="imageSlip" accept="image/png, image/jpeg, image/jpg" required>
 
-            <label>Email for Confirmation</label>
-            <input type="email" id="email" required>
             <input type="hidden" id="csrf_token" name="csrf_token">
 
-            <button type="submit">Submit</button>
+            <button type="submit" class="mt-4 flex-none rounded-md bg-gray-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-gray-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500">บันทึก</button>
         </form>
     </div>
     <script>
