@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Pre-Order Form</title>
+    <link rel="stylesheet" href="./songsinpre/assets/jqaddr/dist/jquery.Thailand.min.css">
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         label { display: block; margin-top: 10px; }
         input, textarea, button { width: 100%; padding: 8px; margin-top: 5px; }
         .checkbox-group { display: flex; align-items: center; }
-        .checkbox-group input { width: auto; margin-right: 10px; }
+        .checkbox-group input.qtr { width: 80px }
     </style>
 </head>
 <body class="bg-[#efefef]">
@@ -18,68 +19,83 @@
         <div class="flex h-[300px] items-center">
             <h2 class="text-2xl text-center w-full">Pre Order</h2>
         </div>
-        <form id="orderForm" class="bg-white rounded-3xl p-4 flex flex-col gap-1">
+        <form id="orderForm" class="bg-white rounded-3xl p-6 flex flex-col gap-1">
             <label>ชื่อ-นามสกุล</label>
-            <input type="text" id="fullName" required placeholder="พิมพ์ที่นี่..." class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
+            <input type="text" id="fullName" required class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
 
             <label>ที่อยู่จัดส่ง</label>
-            <textarea id="address" required placeholder="พิมพ์ที่นี่..." class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6"></textarea>
+            <textarea id="address-1" placeholder="เลขที่/หมู่บ้าน/อาคาร/ชั้น/ถนน (ถ้ามี)" class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6"></textarea>
+            <input id="search" type="text" placeholder="พิมพ์ตำบล, อำเภอ, จังหวัดเพื่อค้นหา" class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6" />
+            <input id="address" type="hidden" />
+            <div id="address-box" class="hidden relative min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
+                <span id="show-text"></span>
+                <span id="edit-addr" class="underline text-gray-500">แก้ไข</span>
+            </div>
 
             <label>เบอร์ติดต่อ</label>
-            <input type="tel" id="phone" required pattern="[0-9]{10}" placeholder="พิมพ์ที่นี่..." class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
+            <input type="tel" id="phone" required pattern="[0-9]{10}" class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
 
             <label>อีเมล</label>
-            <input type="email" id="email" required placeholder="พิมพ์ที่นี่..." class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
+            <input type="email" id="email" required class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
 
             <label>สินค้า</label>
             <div class="checkbox-group flex gap-2 items-center">
-                <input type="checkbox" id="item1" value="Item A">
-                <label for="item1" class="mt-0 mr-2">Item A</label>
-                <input type="number" placeholder="จำนวน" id="qty1" min="1" disabled class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
+                <input type="checkbox" class="flex-none w-[20px]" id="item1" value="FIREHEAD : NO MORE TOYS">
+                <label for="item1" class="mt-0 mr-2 flex-auto text-sm">FIREHEAD : NO MORE TOYS</label>
+                <input type="number" placeholder="จำนวน" id="qty1" min="1" disabled class="qtr text-sm min-w-0 rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
             </div>
             <div class="checkbox-group flex gap-2 items-center">
-                <input type="checkbox" id="item2" value="Item B">
-                <label for="item2" class="mt-0 mr-2">Item B</label>
-                <input type="number" placeholder="จำนวน" id="qty2" min="1" disabled class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
+                <input type="checkbox" class="flex-none w-[20px]" id="item2" value="FIREHEAD : BLADE OF MIND">
+                <label for="item2" class="mt-0 mr-2 flex-auto text-sm">FIREHEAD : BLADE OF MIND</label>
+                <input type="number" placeholder="จำนวน" id="qty2" min="1" disabled class="qtr text-sm min-w-0 rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
             </div>
             <div class="checkbox-group flex gap-2 items-center">
-                <input type="checkbox" id="item3" value="Item C">
-                <label for="item3" class="mt-0 mr-2">Item C</label>
-                <input type="number" placeholder="จำนวน" id="qty3" min="1" disabled class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
+                <input type="checkbox" class="flex-none w-[20px]" id="item3" value="FIREHEAD : ARROWS">
+                <label for="item3" class="mt-0 mr-2 flex-auto text-sm">FIREHEAD : ARROWS</label>
+                <input type="number" placeholder="จำนวน" id="qty3" min="1" disabled class="qtr text-sm min-w-0 rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
             </div>
 
-            <label>อัพโหลดรูปสลิป</label>
-            <input type="file" id="imageSlip" accept="image/png, image/jpeg, image/jpg" required>
+            <label>
+                <div class="grid gap-2 bg-gray-500/10 py-4 rounded-md">
+                    <h4 class="text-center text-gray-900 text-sm font-medium leading-snug">โอนเงินแล้วอัพโหลดสลิป<span class="text-red-500">*</span></h4>
+                    <p class="text-sm text-center text-gray-500 font-medium leading-snug">หากเลือกผิดกดที่รูปภาพเพื่อเลือกใหม่อีกครั้ง</p>
+                    <div class="flex">
+                        <img id="slipPreview" class="preview hidden !max-w-[250px] mx-auto" alt="Slip Preview" />
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <input class="!hidden" type="file" id="imageSlip" name="img-slip" hidden accept="image/png, image/jpeg, image/jpg, image/gif" required />
+                        <div id="select-slip" class="flex w-28 h-9 px-2 flex-col bg-gray-500 rounded-full shadow text-white text-xs font-semibold leading-4 items-center justify-center cursor-pointer focus:outline-none">เลือกไฟล์</div>
+                    </div>
+                </div>
+            </label>
 
             <input type="hidden" id="csrf_token" name="csrf_token">
 
-            <button type="submit" class="mt-4 flex-none rounded-md bg-gray-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-gray-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500">บันทึก</button>
+            <button id="btn-save" type="submit" class="mt-4 flex-none rounded-md bg-gray-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-gray-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500">บันทึก</button>
         </form>
     </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="./songsinpre/assets/jqaddr/dependencies/JQL.min.js"></script>
+    <script type="text/javascript" src="./songsinpre/assets/jqaddr/dependencies/typeahead.bundle.js"></script>
+    <script type="text/javascript" src="./songsinpre/assets/jqaddr/dist/jquery.Thailand.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
             function assignItemsAsync(checkboxes) {
                 return new Promise((resolve, reject) => {
                     let items = {};
-                    let predefinedItemNames = ["Item A", "Item B", "Item C"];
-                    let checkedCount = 0;
+                    let predefinedItemNames = ["FIREHEAD : NO MORE TOYS", "FIREHEAD : BLADE OF MIND", "FIREHEAD : ARROWS"];
                     let checkboxArray = Array.from(checkboxes); // Convert to an array
                     
                     let promises = checkboxArray.map((checkbox, index) => {
                         return new Promise((res, rej) => {
                             if (checkbox.checked) {
-                                if (checkedCount < 3) { // Ensure only 3 slots are used
                                     let qtyInput = document.getElementById(`qty${checkbox.id.slice(-1)}`).value;
                                     if (!qtyInput) {
                                         rej("Please fill quantity fields.");
                                     } else {
-                                        items[predefinedItemNames[checkedCount]] = qtyInput;
-                                        checkedCount++;
+                                        items[predefinedItemNames[index]] = qtyInput;
                                         res();
                                     }
-                                } else {
-                                    res();
-                                }
                             } else {
                                 res();
                             }
@@ -109,12 +125,25 @@
                 }
             }
 
+            $.Thailand.setup({
+                database: './songsinpre/assets/jqaddr/database/db.json'
+            });
+
+            $.Thailand({
+                $search: $('#search'),
+                onDataFill: function(data){
+                    $('#show-text').text(`${data.district} ${data.amphoe} จ.${data.province} ${data.zipcode}`);
+                    $('#address').val(`${data.district} ${data.amphoe} จ.${data.province} ${data.zipcode}`);
+                    $('#address-box').removeClass('hidden');
+                    $('#search').addClass('hidden');
+                }
+            });
 
             const checkboxes = document.querySelectorAll("input[type='checkbox']");
             const filesinput = document.getElementById("imageSlip");
             const csrfinput = document.getElementById("csrf_token");
             const app = document.getElementById("app");
-            const fetchUrl = 'https://script.google.com/macros/s/AKfycbxGKwApVwJM_26b7yjbjpd_mpOEXfMfioUBVz4mvwIG2X-qZBOeI0IsH7h0lRYrrQExpQ/exec'
+            const fetchUrl = 'https://script.google.com/macros/s/AKfycbxClGgCCAOU2xWNqw4hIHZrePZkSyxarHsEfiTSDLdPNHyBQh5Byh0odfWFibGb0Xyt2Q/exec'
             let slipbase64, slipmimetype;
             let reader = new FileReader();
             app.style.display = "none";
@@ -138,26 +167,32 @@
             }
 
             filesinput.addEventListener('change', function(e){
-                reader.readAsDataURL(e.target.files[0]);
+                if(e.target.files.length > 0){
+                    reader.readAsDataURL(e.target.files[0]);
+                }
             });
 
             document.getElementById("orderForm").addEventListener("submit", async function (event) {
                 event.preventDefault();
+                $('#btn-save').text('กำลังบันทึก...');
 
                 let fullName = document.getElementById("fullName").value.trim();
+                let address1 = document.getElementById("address-1").value.trim();
                 let address = document.getElementById("address").value.trim();
                 let phone = document.getElementById("phone").value.trim();
                 let email = document.getElementById("email").value.trim();
                 let imageSlip = document.getElementById("imageSlip").files[0];
 
-                if (!fullName || !address || !phone || !email || !imageSlip) {
+                if (!fullName || !address || !phone || !email || !imageSlip || !address1) {
+                    console.log(address1);
                     alert("Please fill all required fields.");
+                    $('#btn-save').text('บันทึก');
                     return;
                 }
 
                 let formData = new FormData();
                 formData.append("fullName", fullName);
-                formData.append("address", address);
+                formData.append("address", address1 + ' ' + address);
                 formData.append("phone", "'" + phone);
                 formData.append("email", email);
                 formData.append("csrf_token", csrfinput.value.trim());
@@ -165,6 +200,7 @@
                 const items = await processItems(checkboxes);
 
                 if(!items){
+                    $('#btn-save').text('บันทึก');
                     return;
                 }
 
@@ -187,12 +223,43 @@
                     if (result.success) {
                         alert("Order submitted successfully!");
                         document.getElementById("orderForm").reset();
+                        window.location.reload();
                     } else {
+                        $('#btn-save').text('บันทึก');
                         alert("Error: " + result.error);
                     }
                 } catch (error) {
+                    $('#btn-save').text('บันทึก');
                     alert("Submission failed: " + error);
                 }
+            });
+
+            setTimeout(function(){
+                $('#search').css('background-color', 'rgb(107 114 128 / 0.1)');
+            }, 300);
+
+            $('input[name=img-slip]').on('change', function () {
+                const file = $(this).prop('files')[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        slipPreview.src = e.target.result;
+                        slipPreview.style.display = 'block';
+                        $('#select-slip').addClass('hidden');
+                    };
+
+                    reader.readAsDataURL(file);
+                } else {
+                    slipPreview.src = '';
+                    slipPreview.style.display = 'none';
+                    $('#select-slip').removeClass('hidden');
+                }
+            });
+
+            $('#edit-addr').click(function () {
+                $('#search').removeClass('hidden');
+                $('#address-box').addClass('hidden');
             });
 
         });
