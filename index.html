@@ -6,6 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Pre-Order Form</title>
     <link rel="stylesheet" href="./assets/jqaddr/dist/jquery.Thailand.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css">
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         label { display: block; margin-top: 10px; }
@@ -20,10 +21,10 @@
             <h2 class="text-2xl text-center w-full">Pre Order</h2>
         </div>
         <form id="orderForm" class="bg-white rounded-3xl p-6 flex flex-col gap-1">
-            <label>ชื่อ-นามสกุล</label>
+            <label>ชื่อ-นามสกุล<span class="text-red-500">*</span></label>
             <input type="text" id="fullName" required class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
 
-            <label>ที่อยู่จัดส่ง</label>
+            <label>ที่อยู่จัดส่ง<span class="text-red-500">*</span></label>
             <textarea id="address-1" placeholder="เลขที่/หมู่บ้าน/อาคาร/ชั้น/ถนน (ถ้ามี)" class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6"></textarea>
             <input id="search" type="text" placeholder="พิมพ์ตำบล, อำเภอ, จังหวัดเพื่อค้นหา" class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6" />
             <input id="address" type="hidden" />
@@ -32,13 +33,13 @@
                 <span id="edit-addr" class="underline text-gray-500">แก้ไข</span>
             </div>
 
-            <label>เบอร์ติดต่อ</label>
+            <label>เบอร์ติดต่อ<span class="text-red-500">*</span></label>
             <input type="tel" id="phone" required pattern="[0-9]{10}" class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
 
-            <label>อีเมล</label>
+            <label>อีเมล<span class="text-red-500">*</span></label>
             <input type="email" id="email" required class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
 
-            <label>สินค้า</label>
+            <label>สินค้า<span class="text-red-500">*</span></label>
             <div class="checkbox-group flex gap-2 items-center">
                 <input type="checkbox" class="flex-none w-[20px]" id="item1" value="FIREHEAD : NO MORE TOYS">
                 <label for="item1" class="mt-0 mr-2 flex-auto text-sm">FIREHEAD : NO MORE TOYS</label>
@@ -63,7 +64,7 @@
                         <img id="slipPreview" class="preview hidden !max-w-[250px] mx-auto" alt="Slip Preview" />
                     </div>
                     <div class="flex items-center justify-center">
-                        <input class="!hidden" type="file" id="imageSlip" name="img-slip" hidden accept="image/png, image/jpeg, image/jpg, image/gif" required />
+                        <input type="file" id="imageSlip" name="img-slip" hidden accept="image/png, image/jpeg, image/jpg, image/gif" />
                         <div id="select-slip" class="flex w-28 h-9 px-2 flex-col bg-gray-500 rounded-full shadow text-white text-xs font-semibold leading-4 items-center justify-center cursor-pointer focus:outline-none">เลือกไฟล์</div>
                     </div>
                 </div>
@@ -78,6 +79,7 @@
     <script type="text/javascript" src="./assets/jqaddr/dependencies/JQL.min.js"></script>
     <script type="text/javascript" src="./assets/jqaddr/dependencies/typeahead.bundle.js"></script>
     <script type="text/javascript" src="./assets/jqaddr/dist/jquery.Thailand.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
             function assignItemsAsync(checkboxes) {
@@ -91,7 +93,7 @@
                             if (checkbox.checked) {
                                     let qtyInput = document.getElementById(`qty${checkbox.id.slice(-1)}`).value;
                                     if (!qtyInput) {
-                                        rej("Please fill quantity fields.");
+                                        rej("โปรดระบุจำนวน");
                                     } else {
                                         items[predefinedItemNames[index]] = qtyInput;
                                         res();
@@ -105,7 +107,7 @@
                     Promise.all(promises)
                         .then(() => {
                             if (Object.keys(items).length === 0) {
-                                reject("Please fill item/quantity fields.");
+                                reject("โปรดระบุชื่อสินค้ากับจำนวน");
                             } else {
                                 resolve(items);
                             }
@@ -120,7 +122,11 @@
                     let items = await assignItemsAsync(checkboxes);
                     return items;
                 } catch (error) {
-                    alert(error);
+                    Swal.fire({
+                        text: error,
+                        icon: "error",
+                        confirmButtonColor: '#6b7280'
+                    });
                     return null;
                 }
             }
@@ -143,7 +149,7 @@
             const filesinput = document.getElementById("imageSlip");
             const csrfinput = document.getElementById("csrf_token");
             const app = document.getElementById("app");
-            const fetchUrl = 'https://script.google.com/macros/s/AKfycbxClGgCCAOU2xWNqw4hIHZrePZkSyxarHsEfiTSDLdPNHyBQh5Byh0odfWFibGb0Xyt2Q/exec'
+            const fetchUrl = 'https://script.google.com/macros/s/AKfycbxS_xswzjAapRmEyP3cSHsY4bC_s8BUJiQNpSfgDTSoy2urhhBniYu6wUGovISn9HXdNw/exec'
             let slipbase64, slipmimetype;
             let reader = new FileReader();
             app.style.display = "none";
@@ -184,8 +190,11 @@
                 let imageSlip = document.getElementById("imageSlip").files[0];
 
                 if (!fullName || !address || !phone || !email || !imageSlip || !address1) {
-                    console.log(address1);
-                    alert("Please fill all required fields.");
+                    Swal.fire({
+                        text: "โปรดกรอกข้อมูลให้ครบถ้วน",
+                        icon: "error",
+                        confirmButtonColor: '#6b7280'
+                    });
                     $('#btn-save').text('บันทึก');
                     return;
                 }
@@ -221,16 +230,35 @@
 
                     let result = await response.json();
                     if (result.success) {
-                        alert("Order submitted successfully!");
-                        document.getElementById("orderForm").reset();
-                        window.location.reload();
+                        $('#btn-save').text('บันทึก');
+                        Swal.fire({
+                            text: "บันทึกข้อมูลสั่งจองเรียบร้อยแล้ว",
+                            icon: "success",
+                            confirmButtonText: 'OK',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            confirmButtonColor: '#6b7280'
+                        }).then(function(rs){
+                            if(rs.isConfirmed){
+                                document.getElementById("orderForm").reset();
+                                window.location.reload();
+                            }
+                        });
                     } else {
                         $('#btn-save').text('บันทึก');
-                        alert("Error: " + result.error);
+                        Swal.fire({
+                            text: "Error: " + result.error,
+                            icon: "error",
+                            confirmButtonColor: '#6b7280'
+                        });
                     }
                 } catch (error) {
                     $('#btn-save').text('บันทึก');
-                    alert("Submission failed: " + error);
+                    Swal.fire({
+                        text: "Submission failed: " + error,
+                        icon: "error",
+                        confirmButtonColor: '#6b7280'
+                    });
                 }
             });
 
