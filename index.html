@@ -130,20 +130,26 @@
                 <input type="checkbox" class="flex-none w-[20px]" id="item1" value="FIREHEAD : NO MORE TOYS">
                 <label for="item1" class="mt-0 mr-2 flex-auto text-sm">FIREHEAD : NO MORE TOYS</label>
                 <input type="number" placeholder="จำนวน" id="qty1" min="1" disabled class="qtr text-sm min-w-0 rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
+                <!-- <input type="text" placeholder="เลข Edition" id="edt1" disabled class="qtr text-sm min-w-0 rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6" /> -->
             </div>
             <div class="checkbox-group flex gap-2 items-center">
                 <input type="checkbox" class="flex-none w-[20px]" id="item2" value="FIREHEAD : BLADE OF MIND">
                 <label for="item2" class="mt-0 mr-2 flex-auto text-sm">FIREHEAD : BLADE OF MIND</label>
                 <input type="number" placeholder="จำนวน" id="qty2" min="1" disabled class="qtr text-sm min-w-0 rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
+                <!-- <input type="text" placeholder="เลข Edition" id="edt2" disabled class="qtr text-sm min-w-0 rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6" /> -->
             </div>
             <div class="checkbox-group flex gap-2 items-center">
                 <input type="checkbox" class="flex-none w-[20px]" id="item3" value="FIREHEAD : ARROWS">
                 <label for="item3" class="mt-0 mr-2 flex-auto text-sm">FIREHEAD : ARROWS</label>
                 <input type="number" placeholder="จำนวน" id="qty3" min="1" disabled class="qtr text-sm min-w-0 rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6">
+                <!-- <input type="text" placeholder="เลข Edition" id="edt3" disabled class="qtr text-sm min-w-0 rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6" /> -->
             </div>
 
+            <label>หมายเหตุ</label>
+            <textarea id="advice" placeholder="พิมพ์เลข Edition หรือข้อมูลเพิ่มเกี่ยวกับสินค้า (ถ้ามี)" class="min-w-0 flex-auto rounded-md bg-gray-500/10 px-3.5 py-2 text-base text-back outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-500 sm:text-sm/6"></textarea>
+
             <label>
-                <div class="grid gap-2 bg-gray-500/10 py-4 rounded-md">
+                <div class="grid gap-2 bg-yellow-500/10 py-4 rounded-md">
                     <h4 class="text-center text-gray-900 text-sm font-medium leading-snug">โอนเงินแล้วอัพโหลดสลิป<span class="text-red-500">*</span></h4>
                     <p class="text-sm text-center text-gray-500 font-medium leading-snug">หากเลือกผิดกดที่รูปภาพเพื่อเลือกใหม่อีกครั้ง</p>
                     <div class="flex">
@@ -235,7 +241,7 @@
             const filesinput = document.getElementById("imageSlip");
             const csrfinput = document.getElementById("csrf_token");
             const app = document.getElementById("app");
-            const fetchUrl = 'https://script.google.com/macros/s/AKfycbwyPKTO8mcqVMTADbbxaaJYfwgqHWJItIQcVMrWRNsQGFJUfFx8nbvCbt0ekljSWus7/exec'
+            const fetchUrl = 'https://script.google.com/macros/s/AKfycbzfUIyF2iLOVRNDebMDyrOmr395NrbLtW9nPUtjzknpyGHdK8N878Pak6Q77n3I6lY7/exec'
             let slipbase64, slipmimetype;
             let reader = new FileReader();
             app.style.display = "none";
@@ -274,6 +280,7 @@
                 let address = document.getElementById("address").value.trim();
                 let phone = document.getElementById("phone").value.trim();
                 let email = document.getElementById("email").value.trim();
+                let advice = document.getElementById("advice").value.trim();
                 let imageSlip = document.getElementById("imageSlip").files[0];
 
                 if (!fullName || !address || !phone || !email || !imageSlip || !address1) {
@@ -291,6 +298,7 @@
                 formData.append("address", address1 + ' ' + address);
                 formData.append("phone", "'" + phone);
                 formData.append("email", email);
+                formData.append("advice", advice);
                 formData.append("csrf_token", csrfinput.value.trim());
 
                 const items = await processItems(checkboxes);
